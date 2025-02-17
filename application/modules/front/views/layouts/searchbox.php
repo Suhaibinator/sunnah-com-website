@@ -14,23 +14,62 @@ if (strcmp($this->params['_pageType'], "home")) {
 ?>
 
 <div id="search">
-    <!-- Filter button -->
-    <button type="button" id="filterBtn" class="filter-btn">
-        <span class="filter-btn-content">
-            <!-- Default icon set to white, updated dynamically below -->
-            <img src="https://imgstore.org/icon/69jia65cyaso/ffffff/128" class="filter-icon" id="filterIcon" />
-            Filter
-        </span>
-    </button>
-    <a class="searchtipslink">Search Tips</a>
+<div id="replacewithmobileordesktop"></div>
 
-    <div id="searchbar">
-        <form name="searchform" action="/search/" method="get" id="searchform">
-            <input type="text" class="searchquery" name="q" placeholder="Search …"
-                value="<?php echo htmlspecialchars(strip_tags($stextval)); ?>" />
-            <input type="submit" class="searchsubmit" value="l" />
-        </form>
-    </div>
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    const container = document.getElementById("replacewithmobileordesktop");
+
+    // Check screen size; you could also check navigator.userAgent.
+    function loadContent() {
+        // If width <= 600px, treat as "mobile"; otherwise "desktop"
+        if (window.matchMedia("(max-width: 600px)").matches) {
+            container.innerHTML = `
+                <!-- MOBILE COMPONENTS -->
+                <div id="search-controls">
+                    <button type="button" id="filterBtn" class="filter-btn">
+                        <span class="filter-btn-content">
+                            <img src="https://imgstore.org/icon/69jia65cyaso/ffffff/128" class="filter-icon" id="filterIcon" />
+                            Filter
+                        </span>
+                    </button>
+                    <div style="float: right;">
+                        <a class="searchtipslink">Search Tips</a>
+                    </div>
+                </div>
+                <div id="searchbar">
+                    <form name="searchform" action="/search/" method="get" id="searchform">
+                        <input type="text" class="searchquery" name="q" placeholder="Search …" />
+                        <input type="submit" class="searchsubmit" value="l" />
+                    </form>
+                </div>
+            `;
+        } else {
+            container.innerHTML = `
+                <!-- DESKTOP COMPONENTS -->
+                <button type="button" id="filterBtn" class="filter-btn">
+                    <span class="filter-btn-content">
+                        <img src="https://imgstore.org/icon/69jia65cyaso/ffffff/128" class="filter-icon" id="filterIcon" />
+                        Filter
+                    </span>
+                </button>
+                <a class="searchtipslink">Search Tips</a>
+                <div id="searchbar">
+                    <form name="searchform" action="/search/" method="get" id="searchform">
+                        <input type="text" class="searchquery" name="q" placeholder="Search …" />
+                        <input type="submit" class="searchsubmit" value="l" />
+                    </form>
+                </div>
+            `;
+        }
+    }
+
+    // Run at load
+    loadContent();
+    // Also reload on resize if you want dynamic switching
+    window.addEventListener("resize", loadContent);
+});
+</script>
 
     <!-- Modal for selecting collections -->
     <div id="filterModal" class="modal">
